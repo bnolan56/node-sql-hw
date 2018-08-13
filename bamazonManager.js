@@ -98,14 +98,14 @@ function selectProduct(productId, productQty) {
 
     inquirer.prompt([
       {
-        message: "Please type in the id of the product you would like to add inventory to.",
+        name: "productId",
         type: "input",
-        name: "productId"
+        message: "Please type in the id of the product you would like to add inventory to."
       },
       {
-        message: "How many items are being restocked in quantity?",
+        name: "productQty",
         type: "input",
-        name: "productQty"
+        message: "How many items are being restocked in quantity?"
       }
     ]).then(function (answer) {
 
@@ -135,8 +135,8 @@ function selectProduct(productId, productQty) {
 
 
 // adds the updated quantity variable to the table
-function addToInventory(prodObj, productId, productQty) {
-  let updatedQty = prodObj.stock_quantity + productQty
+function addToInventory(productObj, productId, productQty) {
+  let updatedQty = productObj.stock_quantity + productQty
   let query = "UPDATE products SET stock_quantity = ? WHERE ?";
   connection.query(query, [updatedQty, { item_id: productId }], function (error, res) {
     console.log(`-------------------------------\n\n`);
@@ -148,17 +148,17 @@ function addToInventory(prodObj, productId, productQty) {
 function addProduct(params) {
   inquirer.prompt([
     {
-      name: "prodName",
+      name: "productName",
       type: "input",
       message: "What is the name of this product?",
     },
     {
-      name: "prodDept",
+      name: "productDept",
       type: "input",
       message: "What department does this product fall under?"
     },
     {
-      name: "prodPrice",
+      name: "productPrice",
       type: "input",
       message: "How much does the product cost?"
     },
@@ -171,8 +171,8 @@ function addProduct(params) {
     let query = "INSERT INTO products (product_name, department_name, price, stock_quantity) VAlUES (?, ?, ?, ?)";
     console.log(answer)
 
-    if (answer.prodName !== '' && answer.prodDept !== '' && answer.prodPrice !== '' && answer.productQty !== '') {
-      connection.query(query, [answer.prodName, answer.prodDept, answer.prodPrice, answer.productQty], function (error, res) {
+    if (answer.productName !== '' && answer.productDept !== '' && answer.productPrice !== '' && answer.productQty !== '') {
+      connection.query(query, [answer.productName, answer.productDept, answer.productPrice, answer.productQty], function (error, res) {
       })
       additionalUpdates();
     } else {

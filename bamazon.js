@@ -89,13 +89,13 @@ function orderSummary(productObj, productId, productQty) {
 
   let updatedQty = productObj.stock_quantity - productQty;
   let productSales = productObj.price * productQty;
-  let queryOne = "UPDATE products SET stock_quantity = ? where ?";
-  let queryTwo = "UPDATE products SET product_sales = ? where ?";
+  let stockQuery = "UPDATE products SET stock_quantity = ? where ?";
+  let salesQuery = "UPDATE products SET product_sales = ? where ?";
 
-  connection.query(queryOne,[updatedQty, {item_id: productId}], function (error, res) {
+  connection.query(stockQuery,[updatedQty, {item_id: productId}], function (error, res) {
   });
 
-  connection.query(queryTwo, [productSales, { item_id: productId }], function (error, res) {
+  connection.query(salesQuery, [productSales, { item_id: productId }], function (error, res) {
   });
 
   additionalOrder();

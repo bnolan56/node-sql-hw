@@ -11,7 +11,7 @@ const connection = mysql.createConnection({
 });
 
 connection.connect();
-mainMenu()
+mainMenu();
 
 // runs main menu portal
 function mainMenu() {
@@ -84,7 +84,7 @@ function viewLowInventory() {
 }
 
 // function that allows me to select which specific product to add to inventory
-function selectProduct(prodId, prodQty) {
+function selectProduct(productId, productQty) {
   connection.query('SELECT * FROM products', function (error, res) {
     if (error) throw error;
 
@@ -100,12 +100,12 @@ function selectProduct(prodId, prodQty) {
       {
         message: "Please type in the id of the product you would like to add inventory to.",
         type: "input",
-        name: "prodId"
+        name: "productId"
       },
       {
         message: "How many items are being restocked in quantity?",
         type: "input",
-        name: "prodQty"
+        name: "productQty"
       }
     ]).then(function (answer) {
 
@@ -114,14 +114,14 @@ function selectProduct(prodId, prodQty) {
         let product;
 
         for (let i = 0; i < resp.length; i++) {
-          if (resp[i].item_id == answer.prodId) {
+          if (resp[i].item_id == answer.productId) {
             product = resp[i]
           }
         }
         console.log(`\n-------------------------------\n`);
         console.log(product, "Product quantity has been updated.");
         if (product !== undefined) {
-          addToInventory(product, answer.prodId, parseInt(answer.prodQty))
+          addToInventory(product, answer.productId, parseInt(answer.productQty))
           connection.end()
         } else {
           console.log(`-------------------------------\n\n`);
@@ -135,10 +135,10 @@ function selectProduct(prodId, prodQty) {
 
 
 // adds the updated quantity variable to the table
-function addToInventory(prodObj, prodId, prodQty) {
-  let updatedQty = prodObj.stock_quantity + prodQty
+function addToInventory(prodObj, productId, productQty) {
+  let updatedQty = prodObj.stock_quantity + productQty
   let query = "UPDATE products SET stock_quantity = ? WHERE ?";
-  connection.query(query, [updatedQty, { item_id: prodId }], function (error, res) {
+  connection.query(query, [updatedQty, { item_id: productId }], function (error, res) {
     console.log(`-------------------------------\n\n`);
     additionalUpdates();
   })
@@ -163,7 +163,7 @@ function addProduct(params) {
       message: "How much does the product cost?"
     },
     {
-      name: "prodQty",
+      name: "productQty",
       type: "input",
       message: "How many do we have in stock?",
     }
@@ -171,8 +171,8 @@ function addProduct(params) {
     let query = "INSERT INTO products (product_name, department_name, price, stock_quantity) VAlUES (?, ?, ?, ?)";
     console.log(answer)
 
-    if (answer.prodName !== '' && answer.prodDept !== '' && answer.prodPrice !== '' && answer.prodQty !== '') {
-      connection.query(query, [answer.prodName, answer.prodDept, answer.prodPrice, answer.prodQty], function (error, res) {
+    if (answer.prodName !== '' && answer.prodDept !== '' && answer.prodPrice !== '' && answer.productQty !== '') {
+      connection.query(query, [answer.prodName, answer.prodDept, answer.prodPrice, answer.productQty], function (error, res) {
       })
       additionalUpdates();
     } else {
@@ -208,6 +208,9 @@ function additionalUpdates() {
 				break;
 
       case 'Exit':
+        console.log(`-------------------------------\n\n`);
+        console.log('You have successfully logged out of bAmazon Manager Portal.');
+        console.log(`\n\n-------------------------------`);
         process.exit();
         break;
 		}

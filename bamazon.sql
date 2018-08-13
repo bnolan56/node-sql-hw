@@ -12,7 +12,7 @@ CREATE TABLE products (
   stock_quantity INT NULL
 );
 
-INSERT INTO products ('product_name', 'department_name', 'price', 'stock_quantity') VALUES (1,"Spider-Man", "Video Games", 9.99, 9999);
+INSERT INTO products VALUES (1,"Spider-Man", "Video Games", 59.99, 9999);
 
 INSERT INTO products VALUES (2,"God of War", "Video Games", 59.99, 9999);
 

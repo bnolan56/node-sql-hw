@@ -39,37 +39,37 @@ function startbAmazon() {
 function placeOrder() {
   inquirer.prompt([
     {
-      name: "prodId",
+      name: "productId",
       type: "input",
       message: "Please type the ID number of the product that you would like to order."
     },
     {
-      name: "prodQty",
+      name: "productQty",
       type: "input",
       message: "How many of this item would you like to order?"
     }
   ]).then(function (answer) {
-    let prodId = answer.prodId;
-    let prodQty = answer.prodQty;
+    let productId = answer.productId;
+    let productQty = answer.productQty;
 
-    checkInventory(prodId, prodQty);
+    checkInventory(productId, productQty);
   });
 }
 
-function checkInventory(prodId, prodQty) {
+function checkInventory(productId, productQty) {
   connection.query('SELECT * FROM products', function (error, res) {
     if (error) throw error;
 
     let product;
     for(let i = 0; i < res.length; i++){
-      if(res[i].item_id == prodId){
+      if(res[i].item_id == productId){
         product = res[i]
       }
     }
     console.log(product, "Product in stock!");
 
-    if(product.stock_quantity >= prodQty){
-      orderSummary(product, prodId, prodQty)
+    if(product.stock_quantity >= productQty){
+      orderSummary(product, productId, productQty)
     } else {
         // console.log("sorry the order has been cancled, there was insuffecent stock of this purchase")
         console.log(`---------------\n\n`);
@@ -81,21 +81,21 @@ function checkInventory(prodId, prodQty) {
 };
 
 // order summary function that displays all products
-function orderSummary(prodObj, prodId, prodQty) {
+function orderSummary(productObj, productId, productQty) {
 
   console.log(`-------------------------------\n\n`)
   console.log('Order Complete!\n\n')
   console.log(`-------------------------------\n\n`)
 
-  let updatedQty = prodObj.stock_quantity - prodQty;
-  let productSales = prodObj.price * prodQty;
+  let updatedQty = productObj.stock_quantity - productQty;
+  let productSales = productObj.price * productQty;
   let queryOne = "UPDATE products SET stock_quantity = ? where ?";
   let queryTwo = "UPDATE products SET product_sales = ? where ?";
 
-  connection.query(queryOne,[updatedQty, {item_id: prodId}], function (error, res) {
+  connection.query(queryOne,[updatedQty, {item_id: productId}], function (error, res) {
   });
 
-  connection.query(queryTwo, [productSales, { item_id: prodId }], function (error, res) {
+  connection.query(queryTwo, [productSales, { item_id: productId }], function (error, res) {
   });
 
   additionalOrder();
@@ -118,6 +118,9 @@ function additionalOrder() {
 				break;
 
       case 'No, Thank you':
+        console.log(`-------------------------------\n\n`);
+        console.log('Thank you for shopping with bAmazon! Enjoy your order.');
+        console.log(`\n\n-------------------------------`);
         process.exit();
 				break;
 		}
